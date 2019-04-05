@@ -1,0 +1,61 @@
+{
+  "name": "algoritmohistorico",
+  "version": "0.0.0",
+  "description": "Este é um algoritmo que recebe pontos, viagens e itinerarios da geocontrol, e dados de historico 24hrs do realtime, para devolver um arquivo json contendo o histórico de pontos que cada ônibus passou, informando a sequência de pontos visitada.",
+  "main": "src/main.ts",
+  "scripts": {
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "prestart:prod": "rimraf dist && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.es.gov.br/espm/Transcol-Online/Realtime/algoritmoHistorico.git"
+  },
+  "keywords": [
+    "historico",
+    "algoritmo",
+    "realtime",
+    "pontos",
+    "viagens",
+    "itinerarios",
+    "24hrs",
+    "mongodb",
+    "geocontrol"
+  ],
+  "author": "Mateus Garcia",
+  "license": "Apache-2.0",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "moduleNameMapper": {},
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/node": "^11.13.0",
+    "@types/supertest": "^2.0.7",
+    "jest": "^24.7.1",
+    "rimraf": "^2.6.3",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.1",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.0.3",
+    "tsconfig-paths": "^3.8.0",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.1"
+  },
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}
