@@ -9,7 +9,7 @@ async function main () {
     let viagensBanco = await getTable( 'viagem' );
     // 1.2
     let dicionarioPontos = await geraPontos();
-    // 1.3 + 1.4
+    // 1.3 + 1.4 + 1.5
     let dicionarioItinerario = await geraPontosPorItinerario();
 
 
