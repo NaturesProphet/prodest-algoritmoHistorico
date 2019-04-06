@@ -27,7 +27,6 @@ export async function getTable ( tabela: string ): Promise<any> {
             process.exit( 1 );
         }
         await sql.close();
-        console.log( result.recordset )
         return result.recordset;
     } catch ( err ) {
         let msg = `Erro ao consultar o banco estático\n${err.message}`;
