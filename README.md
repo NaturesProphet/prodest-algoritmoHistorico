@@ -40,7 +40,7 @@ data_hora           # historico.DATAHORA
         1.5 Varrer o array do passo 1.3, populando o dicionario do passo 1.4.
 
 ---
-1. EXECUÇÃO 
+2. EXECUÇÃO 
 
         2.1 Instanciar o array principal para armazenar o resultado final.
 
