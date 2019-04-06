@@ -16,7 +16,9 @@ export async function getTable ( tabela: string ): Promise<any> {
         await sql.connect( mssqlConnectionString );
         let result;
         if ( tabela == 'viagem' ) {
+            console.log( 'Carregando os dados de viagens do banco estático para a memória...' );
             result = await sql.query`select id, veiculo, itinerario_id from viagem`;
+            console.log( 'Viagens carregadas.\n' );
         } else if ( tabela == 'ponto' ) {
             result = await sql.query`select id, longitude, latitude from ponto`;
         } else if ( tabela == 'itinerario_ponto' ) {

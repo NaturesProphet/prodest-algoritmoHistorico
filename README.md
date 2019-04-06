@@ -25,8 +25,7 @@ data_hora           # historico.DATAHORA
 ---------------------------------------------------------------------------------------
         ######################### 1. INICIALIZAÇÃO #########################
 
-        # 1.1 Iniciar gerando um dicionario hash para a tabela viagens
-    usando o id da tabelas como chave e seu conteúdo como valor.
+        # 1.1 receber um Array de Viagens do banco estático
 
         # 1.2 Gerar um dicionario hash para os pontos, usando seus IDs como chave,
     gerando um array [LONG,LAT] com suas coordenadas e usando esse array como valor.
@@ -44,7 +43,7 @@ data_hora           # historico.DATAHORA
 
         # 2.1 Instanciar o array principal para armazenar o resultado final.
 
-        # 2.2.1 Executar um laço FOR para percorrer todos os dados do dicionario de viagens.
+        # 2.2.0 Executar um laço FOR para percorrer todos os dados do array de viagens.
 
         # 2.2.1 Para cada registro, instanciar um objeto Viagem ( models/viagem.model ).
 
