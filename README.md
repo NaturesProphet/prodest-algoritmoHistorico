@@ -46,7 +46,7 @@ data_hora           # historico.DATAHORA
 
         2.2.0 Executar um laço FOR para percorrer todos os dados do array de viagens.
 
-        2.2.1 Para cada registro, instanciar um objeto Viagem ( models/viagem.model ).
+        2.2.1 Para cada registro, instanciar um objeto Viagem ( models/viagem.model ) e atribuir os valores da viagem atual na iteração
 
         2.2.2 Para cada objeto Viagem, instanciar um novo array do objeto Historico ( models/historico.model ) e atribuir este array ao campo historico do objeto Viagem.
 
