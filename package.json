@@ -5,6 +5,11 @@
   "main": "src/main.ts",
   "scripts": {
     "clean": "rm -R node_modules",
+    "mongodb": "docker run --name mongodb-srv -d -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin123 -e MONGO_INITDB_DATABASE=banco -p 8081:8081 -p 27017:27017 -p 27018:27018 -p 27019:27019 mongo",
+    "mongodb:persistent": "docker run --name mongodb-srv -d -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin123 -e MONGO_INITDB_DATABASE=banco -v /DOCKER-VOLUMES/mongo:/data/db -v /DOCKER-VOLUMES/mongo/configdb:/data/configdb  -p 27017:27017 mongo",
+    "shell:mongodb": "docker exec -i -t mongodb-srv /bin/bash",
+    "stop:mongodb": "docker stop mongodb-srv && docker rm mongodb-srv",
+    "stop:all": "docker stop $(docker ps -q -a) && docker rm $(docker ps -q -a)",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "prestart:prod": "rimraf dist && tsc",
@@ -57,6 +62,8 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
+    "@types/mongodb": "^3.1.22",
+    "mongodb": "^3.2.3",
     "mssql": "^5.0.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"

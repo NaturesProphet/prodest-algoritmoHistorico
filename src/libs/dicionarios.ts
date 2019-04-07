@@ -12,7 +12,7 @@ async function geraPontos (): Promise<any> {
     let listaBruta = await getTable( 'ponto' );
 
     listaBruta.forEach( ponto => {
-        let local = [ ponto.longitude, ponto.latitude ];
+        let local = [ Number( ponto.longitude ), Number( ponto.latitude ) ];
         dicionario[ Number( ponto.id ) ] = local;
     } );
     console.log( 'Coordenadas dos pontos carregadas.\n' );

@@ -1,7 +1,10 @@
 import { geraPontos, geraPontosPorItinerario } from "./libs/dicionarios";
 import { getTable } from "./database/estatico/sql-server";
 import { Viagem } from "./models/viagem.model";
-import { Historico } from "models/historico.model";
+import { Historico } from "./models/historico.model";
+import { getConnection, executeQuery } from "./database/realtime/mongodb";
+import { MongoClient } from "mongodb";
+import { exec } from "child_process";
 const fs = require( 'fs' );
 
 
@@ -16,6 +19,8 @@ async function main () {
     let dicionarioItinerario = await geraPontosPorItinerario();
     // 2.1
     let estimativas = new Array();
+
+    const mongodb: MongoClient = await getConnection();
 
     //2.2.0
     console.log( '\n\n\n\nIniciando o algoritmo...\n' );
@@ -39,6 +44,9 @@ async function main () {
                 let historico = new Historico();
                 historico.ordem = listaPontosItinerario[ listaIndex ].ordem;
                 historico.ponto_id = listaPontosItinerario[ listaIndex ].ponto_id;
+                //2.2.3.3
+                let coordenadasDoPonto: number[] = dicionarioPontos[ listaPontosItinerario[ listaIndex ].ponto_id ];
+                // 2.2.3.4
 
 
 
@@ -59,7 +67,12 @@ async function main () {
     console.log( 'Escrevendo o resultado no arquivo <estimativas.json> ...' );
     await fs.writeFileSync( 'estimativas.json', JSON.stringify( estimativas, null, 2 ) );
     console.log( '\nAlgoritmo concluído com sucesso. arquivo <estimativas.json> gerado.\n' );
+    mongodb.close();
 }
 
+
+async function teste () {
+    let x = await getConnection();
+}
 
 main();
