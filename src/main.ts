@@ -2,9 +2,9 @@ import { geraPontos, geraPontosPorItinerario } from "./libs/dicionarios";
 import { getTable } from "./database/estatico/sql-server";
 import { Viagem } from "./models/viagem.model";
 import { Historico } from "./models/historico.model";
-import { getConnection, executeQuery } from "./database/realtime/mongodb";
+import { getConnection } from "./database/realtime/mongodb";
 import { MongoClient } from "mongodb";
-import { exec } from "child_process";
+import { calculaFaixa } from "./libs/faixa";
 const fs = require( 'fs' );
 
 
@@ -23,7 +23,7 @@ async function main () {
     const mongodb: MongoClient = await getConnection();
 
     //2.2.0
-    console.log( '\n\n\n\nIniciando o algoritmo...\n' );
+    console.log( '\n\n\n\nAlgoritmo executando... aguarde.\n' );
     for ( let viagemIndex = 0; viagemIndex < viagensBanco.length; viagemIndex++ ) {
         //2.2.1
         let viagem: Viagem = new Viagem();
@@ -38,6 +38,30 @@ async function main () {
         let listaPontosItinerario = dicionarioItinerario[ viagensBanco[ viagemIndex ].id ];
 
         if ( listaPontosItinerario != undefined ) {
+
+            // pequeno truque para ordenar os objetos por ordem crescente de pontos de parada
+            listaPontosItinerario.sort( function ( a, b ) {
+                if ( a.ordem > b.ordem ) {
+                    return 1;
+                }
+                if ( a.ordem < b.ordem ) {
+                    return -1;
+                }
+                return 0;
+            } );
+
+            //2.2.3.a
+            // lendo as coordenadas dos pontos inicias e finais da viagem
+            let pontoInicial = listaPontosItinerario[ 0 ].ponto_id;
+            let pontoFinal = listaPontosItinerario[ listaPontosItinerario.length - 1 ].ponto_id;
+            pontoInicial = dicionarioPontos[ pontoInicial ];
+            pontoFinal = dicionarioPontos[ pontoFinal ];
+
+            let faixaHorario: number[] =
+                await calculaFaixa( viagem.rotulo, viagem.data_i, viagem.data_f,
+                    pontoInicial, pontoFinal, mongodb );
+
+
             //2.2.3.1
             for ( let listaIndex = 0; listaIndex < listaPontosItinerario.length; listaIndex++ ) {
                 //2.2.3.2
@@ -64,15 +88,12 @@ async function main () {
     } //2.2
 
     // 2.3
+    mongodb.close();
+    console.log( 'MongoDB desconectado.' );
     console.log( 'Escrevendo o resultado no arquivo <estimativas.json> ...' );
     await fs.writeFileSync( 'estimativas.json', JSON.stringify( estimativas, null, 2 ) );
-    console.log( '\nAlgoritmo concluído com sucesso. arquivo <estimativas.json> gerado.\n' );
-    mongodb.close();
+    console.log( '\nAlgoritmo concluído. arquivo <estimativas.json> gerado.\n' );
 }
 
-
-async function teste () {
-    let x = await getConnection();
-}
 
 main();

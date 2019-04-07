@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "@types/mongodb": "^3.1.22",
+    "geolib": "^2.0.24",
     "mongodb": "^3.2.3",
     "mssql": "^5.0.5",
     "request": "^2.88.0",

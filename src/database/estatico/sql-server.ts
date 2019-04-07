@@ -5,7 +5,7 @@
 */
 
 import * as sql from 'mssql';
-import { mssqlConnectionString } from "common/database.config";
+import { mssqlConnectionString } from "../../common/database.config";
 
 /**
  * Esta função busca os dados no banco estático conforme a tabela informada.

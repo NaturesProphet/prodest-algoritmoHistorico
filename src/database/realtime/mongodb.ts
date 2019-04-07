@@ -22,6 +22,8 @@ export async function getConnection (): Promise<MongoClient> {
 
 
 export async function executeQuery ( client: MongoClient, rotulo: string, ponto: number[] ) {
+    // ponto = [ -40.312713, -20.343406 ];
+    // rotulo = '12071';
     try {
         const col = client.db( mongoSchema ).collection( 'veiculos' );
         return await col.find(
@@ -33,13 +35,12 @@ export async function executeQuery ( client: MongoClient, rotulo: string, ponto:
                     {
                         $geometry: { type: "Point", coordinates: ponto },
                         $minDistance: 0,
-                        $maxDistance: 1
+                        $maxDistance: 100
                     }
                 }
             }
         ).toArray();
     } catch ( erro ) {
-        console.log( `Erro ao fazer uma busca geo-espacial no mongoDB.\n${erro.message}` );
-        process.exit( 1 );
+        console.log( `uma busca geo-espacial no mongoDB falhou.` );
     }
 }
