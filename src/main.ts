@@ -24,8 +24,8 @@ async function main () {
         let viagem: Viagem = new Viagem();
         viagem.id_viagem = viagensBanco[ viagemIndex ].id;
         viagem.rotulo = viagensBanco[ viagemIndex ].veiculo;
-        viagem.data_i = viagensBanco[ viagemIndex ].horadasaida;
-        viagem.data_f = viagensBanco[ viagemIndex ].horadachegada;
+        viagem.data_i = new Date( viagensBanco[ viagemIndex ].horadasaida ).getTime();
+        viagem.data_f = new Date( viagensBanco[ viagemIndex ].horadachegada ).getTime();
         viagem.itinerario_id = viagensBanco[ viagemIndex ].id;
         //2.2.2
         viagem.historico = new Array();
