@@ -4,7 +4,7 @@ import { Viagem } from "./models/viagem.model";
 import { Historico } from "./models/historico.model";
 import { getConnection } from "./database/realtime/mongodb";
 import { MongoClient } from "mongodb";
-import { calculaFaixa } from "./libs/faixa";
+import { calculaFaixa, getHorario } from "./libs/faixa";
 const fs = require( 'fs' );
 
 
@@ -71,12 +71,10 @@ async function main () {
                 //2.2.3.3
                 let coordenadasDoPonto: number[] = dicionarioPontos[ listaPontosItinerario[ listaIndex ].ponto_id ];
                 // 2.2.3.4
-
-
-
-                //..
-                //..
-                //..
+                let horaNoPonto = await getHorario
+                    ( coordenadasDoPonto, viagem.rotulo, faixaHorario, mongodb );
+                //2.2.3.5
+                historico.data_hora = horaNoPonto;
                 //2.2.3.6
                 viagem.historico.push( historico );
             }

@@ -124,3 +124,25 @@ async function SelecionaCoordenadaMaisProxima ( posicaoCentral: number[], lista:
     }
 
 }
+
+
+export async function getHorario
+    ( ponto: number[], rotulo: string, faixa: number[], mongo: MongoClient ) {
+    if ( faixa == undefined ) {
+        return 0;
+    }
+    let horarios = await executeQuery( mongo, rotulo, ponto );
+    let horariosValidos = new Array();
+    for ( let index = 0; index < horarios.length; index++ ) {
+        let datahora = horarios[ index ].DATAHORA;
+        if ( datahora > faixa[ 0 ] && datahora < faixa[ 1 ] ) {
+            horariosValidos.push( horarios[ index ] );
+        }
+    }
+    let Indexkey: number = await SelecionaCoordenadaMaisProxima( ponto, horariosValidos );
+    if ( Indexkey != undefined ) {
+        return horariosValidos[ Indexkey ].DATAHORA;
+    } else {
+        return 0;
+    }
+}
