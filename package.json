@@ -62,7 +62,9 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/mongodb": "^3.1.22",
+    "dotenv": "^7.0.0",
     "geolib": "^2.0.24",
     "mongodb": "^3.2.3",
     "mssql": "^5.0.5",

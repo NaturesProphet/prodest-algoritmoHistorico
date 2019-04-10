@@ -1,3 +1,6 @@
+import { config as dotEnvConfig } from 'dotenv';
+dotEnvConfig();
+
 import { geraPontos, geraPontosPorItinerario } from "./libs/dicionarios";
 import { getTable } from "./database/estatico/sql-server";
 import { Viagem } from "./models/viagem.model";
@@ -5,6 +8,10 @@ import { Historico } from "./models/historico.model";
 import { getConnection } from "./database/realtime/mongodb";
 import { MongoClient } from "mongodb";
 import { calculaFaixa, getHorario } from "./libs/faixa";
+
+
+
+
 const fs = require( 'fs' );
 
 
