@@ -24,10 +24,13 @@ export async function getTable ( tabela: string ): Promise<any> {
                     `select id, veiculo, itinerario_id, horadasaida, horadachegada from viagem ` +
                     `where dataregistro BETWEEN ${horarios[ 0 ]} AND ${horarios[ 1 ]}`
                 );
+            if ( result.recordset != undefined ) {
+                console.log( `${result.recordset.length - 1} viagens carregadas.\n` );
+            }
         } else if ( tabela == 'ponto' ) {
-            result = await sql.query`select id, longitude, latitude from ponto`;
+            result = await sql.query( `select id, longitude, latitude from ponto` );
         } else if ( tabela == 'itinerario_ponto' ) {
-            result = await sql.query`select ordem, ponto_id, itinerario_id from itinerario_ponto`;
+            result = await sql.query( `select ordem, ponto_id, itinerario_id from itinerario_ponto order by ordem` );
         } else {
             let msg = `A tabela ${tabela} informada não está programada nesta biblioteca.`;
             console.log( msg );
@@ -35,7 +38,6 @@ export async function getTable ( tabela: string ): Promise<any> {
         }
         await sql.close();
         if ( result.recordset != undefined ) {
-            console.log( 'Viagens carregadas.\n' );
             return result.recordset;
         } else {
             let h1 = new Date( horarios[ 0 ] ).toISOString();

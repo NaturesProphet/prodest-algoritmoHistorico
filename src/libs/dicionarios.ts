@@ -15,19 +15,22 @@ async function geraPontos (): Promise<any> {
         let local = [ Number( ponto.longitude ), Number( ponto.latitude ) ];
         dicionario[ Number( ponto.id ) ] = local;
     } );
-    console.log( 'Coordenadas dos pontos carregadas.\n' );
+    console.log( `Coordenadas de ${listaBruta.length - 1} pontos carregadas.\n` );
     return dicionario;
 }
 
 
-async function geraPontosPorItinerario (): Promise<any> {
+async function geraSequenciaDePontosPorItinerario (): Promise<any> {
     console.log( 'Carregando o dicionário de pontos X itinerarios....' );
     let listaBruta = await getTable( 'itinerario_ponto' );
     let dicionario = new Object();
+    let itinerarios = 0;
 
     for ( let index = 0; index < listaBruta.length; index++ ) {
         // inicia uma chave caso não exista ainda
-        if ( dicionario[ listaBruta[ index ].itinerario_id ] == undefined ) {
+        let itinerarioId = listaBruta[ index ].itinerario_id;
+        if ( dicionario[ itinerarioId ] == undefined ) {
+            itinerarios++;
             let pontos = new Array();
             let ponto = {
                 ordem: listaBruta[ index ].ordem,
@@ -44,11 +47,11 @@ async function geraPontosPorItinerario (): Promise<any> {
             dicionario[ listaBruta[ index ].itinerario_id ].push( ponto );
         }
     }
-    console.log( 'dicionário de pontos X itinerarios carregado.\n' );
+    console.log( `Lista de sequência de pontos por itinerario carregada com ${itinerarios} itinerarios.\n` )
     return dicionario;
 }
 
 
 
 
-export { geraPontos, geraPontosPorItinerario };
+export { geraPontos, geraSequenciaDePontosPorItinerario };

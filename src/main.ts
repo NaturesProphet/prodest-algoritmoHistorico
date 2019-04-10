@@ -1,7 +1,7 @@
 import { config as dotEnvConfig } from 'dotenv';
 dotEnvConfig();
 
-import { geraPontos, geraPontosPorItinerario } from "./libs/dicionarios";
+import { geraPontos, geraSequenciaDePontosPorItinerario } from "./libs/dicionarios";
 import { getTable } from "./database/estatico/sql-server";
 import { Viagem } from "./models/viagem.model";
 import { Historico } from "./models/historico.model";
@@ -23,9 +23,11 @@ async function main () {
     // 1.2
     let dicionarioPontos = await geraPontos();
     // 1.3 + 1.4 + 1.5
-    let dicionarioItinerario = await geraPontosPorItinerario();
+    let sequenciaPontos = await geraSequenciaDePontosPorItinerario();
     // 2.1
     let estimativas = new Array();
+
+    let viagensSemInfo = 0;
 
     const mongodb: MongoClient = await getConnection();
 
@@ -42,21 +44,10 @@ async function main () {
         //2.2.2
         viagem.historico = new Array();
         //2.2.3
-        let listaPontosItinerario = dicionarioItinerario[ viagensBanco[ viagemIndex ].id ];
+        let itinerarioId = viagensBanco[ viagemIndex ].itinerario_id;
+        let listaPontosItinerario = sequenciaPontos[ itinerarioId ];
 
         if ( listaPontosItinerario != undefined ) {
-
-            // pequeno truque para ordenar os objetos por ordem crescente de pontos de parada
-            listaPontosItinerario.sort( function ( a, b ) {
-                if ( a.ordem > b.ordem ) {
-                    return 1;
-                }
-                if ( a.ordem < b.ordem ) {
-                    return -1;
-                }
-                return 0;
-            } );
-
             //2.2.3.a
             // lendo as coordenadas dos pontos inicias e finais da viagem
             let pontoInicial = listaPontosItinerario[ 0 ].ponto_id;
@@ -82,13 +73,21 @@ async function main () {
                     ( coordenadasDoPonto, viagem.rotulo, faixaHorario, mongodb );
                 //2.2.3.5
                 historico.data_hora = horaNoPonto;
-                //2.2.3.6
-                viagem.historico.push( historico );
+
+                if ( horaNoPonto != 0 ) {
+                    //2.2.3.6
+                    viagem.historico.push( historico );
+                }
             }
         } //2.2.4
+        else {
+            viagensSemInfo++;
+        }
 
-        //2.2.3.6
-        estimativas.push( viagem );
+        if ( viagem.historico.length != 0 ) {
+            //2.2.3.6
+            estimativas.push( viagem );
+        }
 
     } //2.2
 
@@ -98,6 +97,8 @@ async function main () {
     console.log( 'Escrevendo o resultado no arquivo <estimativas.json> ...' );
     await fs.writeFileSync( 'estimativas.json', JSON.stringify( estimativas, null, 2 ) );
     console.log( '\nAlgoritmo concluído. arquivo <estimativas.json> gerado.\n' );
+    console.log( `Viagens sem relação de pontos (não processadas): ${viagensSemInfo}` );
+    console.log( `Total de viagens: ${viagensBanco.length - 1}` );
 }
 
 

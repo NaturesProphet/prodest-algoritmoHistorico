@@ -5,7 +5,7 @@ import { findNearest, Distance } from 'geolib';
 export async function calculaFaixa
     ( rotulo: string, data_i: number, data_f: number, p0: number[], pF: number[], mongo: MongoClient ) {
     // s1.2
-    let intervalo = ( data_f - data_i ) / 2; //metade do tempo de viagem previsto
+    let intervalo = ( data_f - data_i ) / 2; // adição de metade do tempo de viagem previsto
     //s1.3
     let dataInicialMinima = data_i - intervalo;
     let dataInicialMaxima = data_i + intervalo;
@@ -21,7 +21,6 @@ export async function calculaFaixa
         let datahora = horarioInicioBruto[ index ].DATAHORA;
         if ( datahora > dataInicialMinima && datahora < dataInicialMaxima ) {
             horarioInicioFiltrado.push( horarioInicioBruto[ index ] );
-            // console.log( horarioInicioBruto[ index ] )
         }
     }
     let HorarioInicialReal: number;
@@ -41,7 +40,6 @@ export async function calculaFaixa
         let datahora = horarioFinalBruto[ index ].DATAHORA;
         if ( datahora > dataFinalMinima && datahora < dataFinalmaxima ) {
             horarioFinalFiltrado.push( horarioFinalBruto[ index ] );
-            //console.log( horarioFinalBruto[ index ] )
         }
     }
     let HorarioFinalReal: number;
