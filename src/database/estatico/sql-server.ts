@@ -20,9 +20,10 @@ export async function getTable ( tabela: string ): Promise<any> {
             console.log( 'Carregando os dados de viagens do banco estático para a memória...' );
 
             result = await sql.query
-                `select id, veiculo, itinerario_id, horadasaida, horadachegada from viagem ` +
-                `where dataregistro BETWEEN ${horarios[ 0 ]} AND ${horarios[ 1 ]}`;
-            console.log( 'Viagens carregadas.\n' );
+                (
+                    `select id, veiculo, itinerario_id, horadasaida, horadachegada from viagem ` +
+                    `where dataregistro BETWEEN ${horarios[ 0 ]} AND ${horarios[ 1 ]}`
+                );
         } else if ( tabela == 'ponto' ) {
             result = await sql.query`select id, longitude, latitude from ponto`;
         } else if ( tabela == 'itinerario_ponto' ) {
@@ -34,6 +35,7 @@ export async function getTable ( tabela: string ): Promise<any> {
         }
         await sql.close();
         if ( result.recordset != undefined ) {
+            console.log( 'Viagens carregadas.\n' );
             return result.recordset;
         } else {
             let h1 = new Date( horarios[ 0 ] ).toISOString();
@@ -55,6 +57,7 @@ export async function getTable ( tabela: string ): Promise<any> {
  * "meia noite de ontem" e o segundo é o valor millis da "meia noite de hoje"
  */
 export function JornadaDeOntem (): number[] {
+    //return [ 1554854400000, 1554940800000 ]; // data do meu banco
     // gera o datahora UTC
     let ontem = new Date()
     // ajusta para UTC-3 (America/Sao Paulo)

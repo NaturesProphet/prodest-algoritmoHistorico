@@ -21,7 +21,7 @@ export async function calculaFaixa
         let datahora = horarioInicioBruto[ index ].DATAHORA;
         if ( datahora > dataInicialMinima && datahora < dataInicialMaxima ) {
             horarioInicioFiltrado.push( horarioInicioBruto[ index ] );
-            console.log( horarioInicioBruto[ index ] )
+            // console.log( horarioInicioBruto[ index ] )
         }
     }
     let HorarioInicialReal: number;
