@@ -1,20 +1,19 @@
-import { MongoClient } from "mongodb";
-import { executeQuery } from "../database/realtime/mongodb";
-import { findNearest, Distance } from 'geolib';
+import { OMaisPertoDe, VeiculosProximos } from "./geolib";
 
-export async function calculaFaixa
-    ( rotulo: string, data_i: number, data_f: number, p0: number[], pF: number[], mongo: MongoClient ) {
-    // s1.2
+
+
+export function calculaFaixa ( rotulo: string, data_i: number, data_f: number, p0, pF, historico ) {
+
     let intervalo = ( data_f - data_i ) / 2; // adição de metade do tempo de viagem previsto
-    //s1.3
+
     let dataInicialMinima = data_i - intervalo;
     let dataInicialMaxima = data_i + intervalo;
     let dataFinalMinima = data_f - intervalo;
     let dataFinalmaxima = data_f + intervalo;
 
 
-    //s1.4
-    let horarioInicioBruto = await executeQuery( mongo, rotulo, p0 );
+
+    let horarioInicioBruto = VeiculosProximos( rotulo, p0, historico );
     let horarioInicioFiltrado = new Array();
 
     for ( let index = 0; index < horarioInicioBruto.length; index++ ) {
@@ -24,7 +23,7 @@ export async function calculaFaixa
         }
     }
     let HorarioInicialReal: number;
-    let key: number = await SelecionaCoordenadaMaisProxima( p0, horarioInicioFiltrado );
+    let key: number = OMaisPertoDe( p0, horarioInicioFiltrado );
     if ( key != undefined ) {
         HorarioInicialReal = horarioInicioFiltrado[ key ].DATAHORA;
     } else {
@@ -33,7 +32,7 @@ export async function calculaFaixa
 
 
     //s1.5
-    let horarioFinalBruto = await executeQuery( mongo, rotulo, pF );
+    let horarioFinalBruto = VeiculosProximos( rotulo, pF, historico );
     let horarioFinalFiltrado = new Array();
 
     for ( let index = 0; index < horarioFinalBruto.length; index++ ) {
@@ -43,7 +42,7 @@ export async function calculaFaixa
         }
     }
     let HorarioFinalReal: number;
-    let key2: number = await SelecionaCoordenadaMaisProxima( pF, horarioFinalFiltrado );
+    let key2: number = OMaisPertoDe( pF, horarioFinalFiltrado );
     if ( key2 != undefined ) {
         HorarioFinalReal = horarioFinalFiltrado[ key2 ].DATAHORA;
     } else {
@@ -62,74 +61,12 @@ export async function calculaFaixa
 
 
 
-/**
- * 
- * @param posicaoCentral Array [LONG,LAT] com as coordenadas do local central
- * @param Lista Array bruto que vem da query ao mongodb
- * @returns Objeto apontando o índice da lista onde está a posição mais próxima e a distãncia
- */
-async function SelecionaCoordenadaMaisProxima ( posicaoCentral: number[], lista: any[] ) {
 
-    /**
-     * O modulo GeoLib trabalha com objetos no formato
-     *  {
-     *    latitude: float,
-     *    longitude: float
-     *  }
-     * antes de usar, é necessário converter os dados para este formato.
-     * referência: https://www.npmjs.com/package/geolib
-     */
-
-
-    /**
-     * 
-     * O argumento 'lista' é um objeto bruto que chega da query near executada no mongodb.
-     * seu formato é parecido com este:
-     * [
-     *  {
-     *    "LOCALIZACAO": 
-     *      [
-     *        -40.322700000000005,
-     *        -20.350196666666665
-     *      ],
-     *    "DATAHORA": 1553469168000
-     *  }, .... 
-     * ]
-     * 
-    */
-
-    const centro = {
-        latitude: posicaoCentral[ 1 ],
-        longitude: posicaoCentral[ 0 ]
-    };
-
-    let CoordenadasLatLongEquivalentes = [];
-
-    for ( let indiceLista = 0; indiceLista < lista.length; indiceLista++ ) {
-
-        let latlng = {
-            latitude: lista[ indiceLista ].LOCALIZACAO[ 1 ],
-            longitude: lista[ indiceLista ].LOCALIZACAO[ 0 ]
-        };
-        CoordenadasLatLongEquivalentes.push( latlng );
-    }
-    let objetoDistanciaInfo = findNearest( centro, CoordenadasLatLongEquivalentes );
-    if ( objetoDistanciaInfo != undefined ) {
-        let distanceInfo: Distance = JSON.parse( JSON.stringify( objetoDistanciaInfo ) );
-        return Number( distanceInfo.key );
-    } else {
-        return undefined;
-    }
-
-}
-
-
-export async function getHorario
-    ( ponto: number[], rotulo: string, faixa: number[], mongo: MongoClient ) {
+export function getHorario ( ponto, rotulo: string, faixa: number[], historico: [] ) {
     if ( faixa == undefined ) {
         return 0;
     }
-    let horarios = await executeQuery( mongo, rotulo, ponto );
+    let horarios = VeiculosProximos( rotulo, ponto, historico );
     let horariosValidos = new Array();
     for ( let index = 0; index < horarios.length; index++ ) {
         let datahora = horarios[ index ].DATAHORA;
@@ -137,9 +74,9 @@ export async function getHorario
             horariosValidos.push( horarios[ index ] );
         }
     }
-    let Indexkey: number = await SelecionaCoordenadaMaisProxima( ponto, horariosValidos );
-    if ( Indexkey != undefined ) {
-        return horariosValidos[ Indexkey ].DATAHORA;
+    let maisPerto = OMaisPertoDe( ponto, horariosValidos );
+    if ( maisPerto != undefined ) {
+        return maisPerto.DATAHORA;
     } else {
         return 0;
     }

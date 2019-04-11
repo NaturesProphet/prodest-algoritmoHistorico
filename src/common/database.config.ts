@@ -11,10 +11,12 @@ const mongoPassword = process.env.MONGO_PASSWORD || 'admin123';
 const mongoSchema = process.env.MONGO_SCHEMA || 'historico';
 const mongoConf: string = '?authSource=admin';
 
+const raioDeBusca: number = Number( process.env.RAIO_BUSCA ) || 1000;
+
 const mssqlConnectionString: string =
     `mssql://${mssqlUser}:${mssqlPassword}@${mssqlHost}:${mssqlPort}/${mssqlSchema}`;
 
 const mongoConnectionString: string =
     `mongodb://${mongoUser}:${mongoPassword}@${mongoHost}:${mongoPort}/${mongoSchema}${mongoConf}`;
 
-export { mssqlConnectionString, mongoConnectionString, mongoSchema };
+export { mssqlConnectionString, mongoConnectionString, mongoSchema, raioDeBusca };

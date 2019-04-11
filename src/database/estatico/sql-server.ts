@@ -59,7 +59,7 @@ export async function getTable ( tabela: string ): Promise<any> {
  * "meia noite de ontem" e o segundo é o valor millis da "meia noite de hoje"
  */
 export function JornadaDeOntem (): number[] {
-    //return [ 1554854400000, 1554940800000 ]; // data do meu banco
+    return [ 1554854400000, 1554940800000 ]; // data do meu banco
     // gera o datahora UTC
     let ontem = new Date()
     // ajusta para UTC-3 (America/Sao Paulo)

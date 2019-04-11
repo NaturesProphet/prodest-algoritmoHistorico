@@ -5,7 +5,7 @@
 */
 
 import { mongoConnectionString, mongoSchema } from "../../common/database.config";
-import { connect, MongoClient } from 'mongodb';
+import { connect, MongoClient, FindOneOptions } from 'mongodb';
 
 
 export async function getConnection (): Promise<MongoClient> {
@@ -42,5 +42,20 @@ export async function executeQuery ( client: MongoClient, rotulo: string, ponto:
         ).toArray();
     } catch ( erro ) {
         console.log( `uma busca geo-espacial no mongoDB falhou.` );
+    }
+}
+
+
+export async function getHistorico ( client: MongoClient ) {
+    try {
+        const col = client.db( mongoSchema ).collection( 'veiculos' );
+        return await col.find( {}, {
+            projection: {
+                "ROTULO": 1, "_id": 0, "LOCALIZACAO": 1, "DATAHORA": 1
+            }
+        } ).toArray();
+    } catch ( erro ) {
+        console.log( `Erro ao buscar os dados no mongoDB\n${erro.message}` );
+        process.exit( 1 );
     }
 }
