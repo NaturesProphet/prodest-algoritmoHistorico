@@ -14,7 +14,7 @@
     "startOLD": "ts-node -r tsconfig-paths/register src/main.ts",
     "start": "npm run prestart:prod && npm run start:prod",
     "prestart:prod": "rimraf dist && tsc",
-    "start:prod": "node --max-old-space-size=3098 dist/main.js",
+    "start:prod": "node --max-old-space-size=4096 dist/main.js",
     "persistentdb": "docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Senh@Dif1cil' -p 1433:1433 -v /DOCKER-VOLUMES/api-ceturb/mssql:/var/opt/mssql --name sql-server-persistent -d microsoft/mssql-server-linux"
   },
   "repository": {
