@@ -2,7 +2,7 @@ import { OMaisPertoDe, VeiculosProximos } from "./geolib";
 
 
 
-export function calculaFaixa ( rotulo: string, data_i: number, data_f: number, p0, pF, historico ) {
+export function calculaFaixa ( data_i: number, data_f: number, p0, pF, historico ) {
 
     let intervalo = ( data_f - data_i ) / 2; // adição de metade do tempo de viagem previsto
 
@@ -13,7 +13,8 @@ export function calculaFaixa ( rotulo: string, data_i: number, data_f: number, p
 
 
 
-    let horarioInicioBruto = VeiculosProximos( rotulo, p0, historico );
+    let horarioInicioBruto = VeiculosProximos( p0, historico );
+    //console.log( horarioInicioBruto.length )
     let horarioInicioFiltrado = new Array();
 
     for ( let index = 0; index < horarioInicioBruto.length; index++ ) {
@@ -23,16 +24,17 @@ export function calculaFaixa ( rotulo: string, data_i: number, data_f: number, p
         }
     }
     let HorarioInicialReal: number;
-    let key: number = OMaisPertoDe( p0, horarioInicioFiltrado );
+    let key = OMaisPertoDe( p0, horarioInicioFiltrado );
+    //console.log( key )
     if ( key != undefined ) {
-        HorarioInicialReal = horarioInicioFiltrado[ key ].DATAHORA;
+        HorarioInicialReal = key.DATAHORA;
     } else {
         // console.log( `O veículo ${rotulo} não foi encontrado dentro do intervalo inicial da viagem` );
     }
 
 
-    //s1.5
-    let horarioFinalBruto = VeiculosProximos( rotulo, pF, historico );
+
+    let horarioFinalBruto = VeiculosProximos( pF, historico );
     let horarioFinalFiltrado = new Array();
 
     for ( let index = 0; index < horarioFinalBruto.length; index++ ) {
@@ -42,9 +44,9 @@ export function calculaFaixa ( rotulo: string, data_i: number, data_f: number, p
         }
     }
     let HorarioFinalReal: number;
-    let key2: number = OMaisPertoDe( pF, horarioFinalFiltrado );
+    let key2 = OMaisPertoDe( pF, horarioFinalFiltrado );
     if ( key2 != undefined ) {
-        HorarioFinalReal = horarioFinalFiltrado[ key2 ].DATAHORA;
+        HorarioFinalReal = key2.DATAHORA;
     } else {
         //console.log( `O veículo ${rotulo} não foi encontrado dentro do intervalo final da viagem` );
     }
@@ -62,11 +64,11 @@ export function calculaFaixa ( rotulo: string, data_i: number, data_f: number, p
 
 
 
-export function getHorario ( ponto, rotulo: string, faixa: number[], historico: [] ) {
+export function getHorario ( ponto, faixa: number[], historico: [] ) {
     if ( faixa == undefined ) {
         return 0;
     }
-    let horarios = VeiculosProximos( rotulo, ponto, historico );
+    let horarios = VeiculosProximos( ponto, historico );
     let horariosValidos = new Array();
     for ( let index = 0; index < horarios.length; index++ ) {
         let datahora = horarios[ index ].DATAHORA;

@@ -24,7 +24,6 @@ export function OMaisPertoDe ( centro, lista: any[] ) {
     } else {
         return undefined;
     }
-
 }
 
 
@@ -36,30 +35,27 @@ export function OMaisPertoDe ( centro, lista: any[] ) {
  * @param centro 
  * @param historicoLista 
  */
-export function VeiculosProximos ( rotulo, centro, historicoLista: any[] ) {
+export function VeiculosProximos ( centro, historicoLista: any[] ) {
     let areaDeBusca = new Array();
 
     for ( let index = 0; index < historicoLista.length; index++ ) {
         areaDeBusca.push( historicoLista[ index ].LOCALIZACAO );
     }
-
     let result = orderByDistance( centro, areaDeBusca );
     let listaOrdenada = new Array();
 
     let distancia = 0;
-    let index = 0;
+    let resultIndex = 0;
     while ( distancia < raioDeBusca ) {
-        if ( result[ index ].distance < raioDeBusca ) {
-            let key = result[ index ].key;
-            if ( historicoLista[ key ].ROTULO == rotulo ) {
-                listaOrdenada.push( historicoLista[ key ] );
-            }
+        if ( result[ resultIndex ].distance < raioDeBusca ) {
+            let key = result[ resultIndex ].key;
+            listaOrdenada.push( historicoLista[ key ] );
         }
-        if ( distancia == 0 ) {
+        distancia = result[ resultIndex ].distance;
+        if ( distancia == 0 || distancia == undefined ) {
             break;
         }
-        distancia = result[ index ].distance;
-        index++;
+        resultIndex++;
     }
     return listaOrdenada;
 }

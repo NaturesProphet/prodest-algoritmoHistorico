@@ -49,7 +49,7 @@ export async function executeQuery ( client: MongoClient, rotulo: string, ponto:
 export async function getHistorico ( client: MongoClient ) {
     try {
         const col = client.db( mongoSchema ).collection( 'veiculos' );
-        return await col.find( {}, {
+        return await col.find( { "IGNICAO": true }, {
             projection: {
                 "ROTULO": 1, "_id": 0, "LOCALIZACAO": 1, "DATAHORA": 1
             }
