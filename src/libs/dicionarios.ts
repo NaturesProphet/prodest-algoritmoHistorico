@@ -85,7 +85,7 @@ async function geraHistoricoPorRotulo () {
             let lista = new Array();
             lista.push( {
                 ROTULO: doc.ROTULO,
-                DATAHORA: doc.DATAHORA,
+                DATAHORA: doc.DATAHORA - 10800000, //utc-3
                 LOCALIZACAO: {
                     latitude: Number( doc.LOCALIZACAO[ 1 ] ),
                     longitude: Number( doc.LOCALIZACAO[ 0 ] )
@@ -95,7 +95,7 @@ async function geraHistoricoPorRotulo () {
         } else {
             dicionario[ rotulo ].push( {
                 ROTULO: doc.ROTULO,
-                DATAHORA: doc.DATAHORA,
+                DATAHORA: doc.DATAHORA - 10800000, //utc-3
                 LOCALIZACAO: {
                     latitude: Number( doc.LOCALIZACAO[ 1 ] ),
                     longitude: Number( doc.LOCALIZACAO[ 0 ] )
