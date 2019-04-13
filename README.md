@@ -61,6 +61,6 @@ O arquivo gerado pelo algoritmo estará na pasta raiz do repositório.
 
 ## TEMPO DE EXECUÇÃO ESTIMADO
 
-Em um pc mediano, com 12 GB de ram e um dual core de terceira geração, espera-se um tempo em torno de 8 minutos para cada mil viagens a serem processadas. 
+Em um pc mediano, com 12 GB de ram e um dual core de terceira geração, espera-se um tempo em torno de 38 minutos para cada mil viagens a serem processadas. 
 
 ( baseado em testes ).

@@ -71,7 +71,7 @@ async function geraHistoricoPorRotulo () {
     let listaBruta = await getHistorico( mongo );
     let registros = listaBruta.length;
     mongo.close();
-    console.log( 'Query OK! MongoDB desconectado.' );
+    console.log( 'Query OK! MongoDB desconectado.\n' );
 
     console.log( 'Gerando o dicionário de histórico por rotulo...' );
     let dicionario = new Object();
