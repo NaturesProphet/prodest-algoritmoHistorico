@@ -6,11 +6,15 @@ export class Viagem {
 
     rotulo: string;
 
+    bandeira: string;
+
     data_i: number;
 
     data_f: number;
 
     itinerario_id: number;
+
+    itinerario_codigo: string;
 
     historico: Historico[];
 

@@ -31,7 +31,10 @@ export async function getTable ( tabela: string ): Promise<any> {
             result = await sql.query( `select id, longitude, latitude from ponto` );
         } else if ( tabela == 'itinerario_ponto' ) {
             result = await sql.query( `select ordem, ponto_id, itinerario_id from itinerario_ponto order by ordem` );
-        } else {
+        } else if ( tabela == 'itinerario' ) {
+            result = await sql.query( `select id, codigo, bandeira from itinerario` );
+        }
+        else {
             let msg = `A tabela ${tabela} informada não está programada nesta biblioteca.`;
             console.log( msg );
             process.exit( 1 );

@@ -51,7 +51,21 @@ async function geraSequenciaDePontosPorItinerario (): Promise<any> {
     return dicionario;
 }
 
+async function geraItinerarios (): Promise<any> {
+    console.log( 'Carregando o dicionário de itinerários....' );
+    let dicionario = new Object();
+    let listaBruta = await getTable( 'itinerario' );
+
+    listaBruta.forEach( itinerario => {
+        dicionario[ Number( itinerario.id ) ] = {
+            id: itinerario.id,
+            codigo: itinerario.codigo,
+            bandeira: itinerario.bandeira
+        };
+    } );
+    console.log( `${listaBruta.length - 1} itinerários encontrados no banco estático e carregados.\n` );
+    return dicionario;
+}
 
 
-
-export { geraPontos, geraSequenciaDePontosPorItinerario };
+export { geraPontos, geraSequenciaDePontosPorItinerario, geraItinerarios };

@@ -1,7 +1,7 @@
 import { config as dotEnvConfig } from 'dotenv';
 dotEnvConfig();
 
-import { geraPontos, geraSequenciaDePontosPorItinerario } from "./libs/dicionarios";
+import { geraPontos, geraSequenciaDePontosPorItinerario, geraItinerarios } from "./libs/dicionarios";
 import { getTable } from "./database/estatico/sql-server";
 import { Viagem } from "./models/viagem.model";
 import { Historico } from "./models/historico.model";
@@ -18,6 +18,7 @@ const fs = require( 'fs' );
 
 
 async function main () {
+
     let horaInicio: number = new Date().getTime();
     // 1.1
     let viagensBanco = await getTable( 'viagem' );
@@ -27,6 +28,8 @@ async function main () {
     let sequenciaPontos = await geraSequenciaDePontosPorItinerario();
     // 2.1
     let estimativas = new Array();
+
+    let itinerarios = await geraItinerarios();
 
     let viagensSemInfo = 0;
     let viagensSemInfoLog = new Array();
@@ -39,14 +42,16 @@ async function main () {
     //2.2.0
     console.log( '\n\n\n\nAlgoritmo executando... aguarde.\n' );
     for ( let viagemIndex = 0; viagemIndex < viagensBanco.length; viagemIndex++ ) {
-        //for ( let viagemIndex = 0; viagemIndex < 1000; viagemIndex++ ) {
+        //for ( let viagemIndex = 0; viagemIndex < 100; viagemIndex++ ) {
         //2.2.1
         let viagem: Viagem = new Viagem();
         viagem.id_viagem = viagensBanco[ viagemIndex ].id;
         viagem.rotulo = viagensBanco[ viagemIndex ].veiculo;
+        viagem.bandeira = itinerarios[ viagensBanco[ viagemIndex ].itinerario_id ].bandeira
         viagem.data_i = new Date( viagensBanco[ viagemIndex ].horadasaida ).getTime();
         viagem.data_f = new Date( viagensBanco[ viagemIndex ].horadachegada ).getTime();
         viagem.itinerario_id = viagensBanco[ viagemIndex ].itinerario_id;
+        viagem.itinerario_codigo = itinerarios[ viagensBanco[ viagemIndex ].itinerario_id ].codigo
         //2.2.2
         viagem.historico = new Array();
         //2.2.3
