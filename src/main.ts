@@ -41,7 +41,7 @@ async function main () {
         viagem.rotulo = viagensBanco[ viagemIndex ].veiculo;
         viagem.data_i = new Date( viagensBanco[ viagemIndex ].horadasaida ).getTime();
         viagem.data_f = new Date( viagensBanco[ viagemIndex ].horadachegada ).getTime();
-        viagem.itinerario_id = viagensBanco[ viagemIndex ].id;
+        viagem.itinerario_id = viagensBanco[ viagemIndex ].itinerario_id;
 
         viagem.historico = new Array();
 
