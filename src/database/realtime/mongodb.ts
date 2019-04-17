@@ -5,7 +5,7 @@
 */
 
 import { mongoConnectionString, mongoSchema } from "../../common/database.config";
-import { connect, MongoClient, FindOneOptions } from 'mongodb';
+import { connect, MongoClient } from 'mongodb';
 
 
 export async function getConnection (): Promise<MongoClient> {
@@ -26,9 +26,10 @@ export async function executeQuery ( client: MongoClient, rotulo: string, ponto:
     // rotulo = '12071';
     try {
         const col = client.db( mongoSchema ).collection( 'veiculos' );
-        return await col.find(
+        let historia = await col.find(
             {
                 ROTULO: rotulo,
+                IGNICAO: true,
                 LOCALIZACAO:
                 {
                     $near:
@@ -38,24 +39,13 @@ export async function executeQuery ( client: MongoClient, rotulo: string, ponto:
                         $maxDistance: 100
                     }
                 }
-            }
+            }, { projection: { "_id": 0, "DATAHORA": 1, "LOCALIZACAO": 1, ROTULO: 1 } }
         ).toArray();
+        for ( let index = 0; index < historia.length; index++ ) {
+            historia[ index ].DATAHORA -= 10800000; // CONVERTE PARA UTC-3
+        }
+        return historia;
     } catch ( erro ) {
         console.log( `uma busca geo-espacial no mongoDB falhou.` );
-    }
-}
-
-
-export async function getHistorico ( client: MongoClient ) {
-    try {
-        const col = client.db( mongoSchema ).collection( 'veiculos' );
-        return await col.find( { "IGNICAO": true }, {
-            projection: {
-                "ROTULO": 1, "_id": 0, "LOCALIZACAO": 1, "DATAHORA": 1
-            }
-        } ).toArray();
-    } catch ( erro ) {
-        console.log( `Erro ao buscar os dados no mongoDB\n${erro.message}` );
-        process.exit( 1 );
     }
 }
